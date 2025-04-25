@@ -1,0 +1,10 @@
+streamlit 
+torch 
+torchvision 
+transformers 
+diffusers 
+pillow 
+opencv-python
+numpy
+timm
+accelerate

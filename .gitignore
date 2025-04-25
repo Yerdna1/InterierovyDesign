@@ -1,0 +1,12 @@
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
