@@ -7,7 +7,10 @@ import io
 import base64
 # Keep numpy and cv2 as they are generally lighter and might be used elsewhere
 import numpy as np
-import cv2
+try:
+    import cv2
+except ImportError:
+    import cv2.cv2 as cv2  # Fallback for headless environments
 import os
 from datetime import datetime
 import sys
