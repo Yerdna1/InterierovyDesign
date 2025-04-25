@@ -1,4 +1,7 @@
-# Generátor Interiérového Dizajnu
+# Generátor Interiérového Dizajnu ❤️
+
+Venované Miske od Andreja
+
 
 Jednoduchá aplikácia na úpravu interiéru pomocou umelej inteligencie.
 
@@ -33,6 +36,7 @@ Jednoduchá aplikácia na úpravu interiéru pomocou umelej inteligencie.
 Ak aplikácia nefunguje:
 - Skontrolujte, či máte nainštalovaný Python (verzia 3.8 alebo novšia) z [python.org](https://www.python.org/downloads/)
 - Ak sa zobrazí chyba, skúste znova spustiť **run.bat**
-- Pre problémy napíšte na: váš@email.com
+- Pre problémy napíšte na: marekzm@azet.sk
+
 
 ![Návod na použitie](https://via.placeholder.com/600x400?text=Tu+môže+byť+obrázok+s+návodom)
