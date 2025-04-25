@@ -125,7 +125,7 @@ def generate_design(image, prompt, style, strength=0.75):
     pipe, _, _, device = initialize_models()
     
     # Vytvorenie promptu
-    full_prompt = f"interior design photo, {style} style, {prompt}, professional photography, high quality, 8k resolution, beautiful lighting"
+    full_prompt = f"interior design photo, {style} style, {prompt}, professional photography, high quality, 4k resolution, beautiful lighting"
     negative_prompt = "ugly, tiling, poorly drawn, deformed, blurry, low quality, watermark, text"
     
     # Konverzia obrázka pre model
@@ -140,7 +140,7 @@ def generate_design(image, prompt, style, strength=0.75):
             image=image,
             strength=strength,
             guidance_scale=7.5,
-            num_inference_steps=30  # Znížený počet krokov pre rýchlejšie generovanie
+            num_inference_steps=100  # Increased steps for higher quality
         ).images[0]
     
     return result
@@ -344,39 +344,71 @@ if uploaded_file is not None:
         with cols[i % 3]:
             st.markdown(f"- {item}")
 
+def generate_example_images():
+    """Generates example before/after images for the gallery"""
+    examples = [
+        {
+            "before": "living_room_before.jpg",
+            "after": "living_room_after.jpg",
+            "style": "Modern",
+            "description": "Transformácia obývačky na moderný minimalistický priestor",
+            "prompt": "modern minimalist living room with neutral colors and clean lines"
+        },
+        {
+            "before": "bedroom_before.jpg", 
+            "after": "bedroom_after.jpg",
+            "style": "Scandinavian",
+            "description": "Premena spálne na útulný škandinávsky štýl",
+            "prompt": "cozy scandinavian bedroom with light wood and textiles"
+        },
+        {
+            "before": "kitchen_before.jpg",
+            "after": "kitchen_after.jpg",
+            "style": "Industrial",
+            "description": "Kuchyňa v industriálnom štýle",
+            "prompt": "industrial style kitchen with exposed brick and metal accents"
+        }
+    ]
+    
+    # Generate images if they don't exist
+    for example in examples:
+        if not os.path.exists(example["before"]):
+            # Generate AI-based before image showing outdated version
+            before_prompt = f"interior design photo, outdated {example['style']} style, {example['prompt']}, before renovation, worn furniture, old wallpaper, poor lighting, professional photography"
+            negative_prompt = "ugly, tiling, poorly drawn, deformed, blurry, low quality, watermark, text"
+            
+            # Create blank image as base
+            blank_img = Image.new('RGB', (512, 512), color='white')
+            draw = ImageDraw.Draw(blank_img)
+            draw.text((150, 250), "Generating before image...", fill="black")
+            blank_img.save(example["before"])
+            
+            # Generate AI version
+            before_img = generate_design(blank_img, before_prompt, example["style"])
+            before_img.save(example["before"])
+            
+        if not os.path.exists(example["after"]):
+            # Generate AI design
+            before_img = Image.open(example["before"])
+            after_prompt = f"renovated {example['style']} style, {example['prompt']}, after renovation, professional interior design, high quality materials, perfect lighting"
+            after_img = generate_design(before_img, after_prompt, example["style"])
+            after_img.save(example["after"])
+    
+    return examples
+
 # Galéria príkladov (vylepšené)
 st.markdown("---")
 st.subheader("🖼️ Príklady transformácií")
 
 example_cols = st.columns(3)
-examples = [
-    {
-        "before": "living_room_before.jpg",
-        "after": "living_room_after.jpg",
-        "style": "Modern",
-        "description": "Transformácia obývačky na moderný minimalistický priestor"
-    },
-    {
-        "before": "bedroom_before.jpg",
-        "after": "bedroom_after.jpg",
-        "style": "Scandinavian",
-        "description": "Premena spálne na útulný škandinávsky štýl"
-    },
-    {
-        "before": "kitchen_before.jpg",
-        "after": "kitchen_after.jpg",
-        "style": "Industrial",
-        "description": "Kuchyňa v industriálnom štýle"
-    }
-]
+examples = generate_example_images()
 
 for i, example in enumerate(examples):
     with example_cols[i]:
         st.markdown(f"**{example['style']}**")
         st.caption(example['description'])
-        # Tu by ste mohli pridať skutočné príklady obrázkov
-        st.image("https://via.placeholder.com/300x200.png?text=Pred", caption="Pred")
-        st.image("https://via.placeholder.com/300x200.png?text=Po", caption="Po")
+        st.image(example["before"], caption="Pred")
+        st.image(example["after"], caption="Po")
 
 # Footer
 st.markdown("---")
